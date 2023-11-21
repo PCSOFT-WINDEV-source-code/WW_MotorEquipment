@@ -1,0 +1,425 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CProductVariation
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e3261b03caf5
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      CProductVariation is Class
+      	m_nVariationID is 8-byte int <mapping="ProductVariationID">
+      	m_pclAssociatedProduct is CProduct dynamic
+      	m_bByDefault is boolean <mapping="ByDefault">
+      	m_nQuantityInStock is int <mapping="Quantity">
+      	m_cyUPBT is currency <mapping="UnitPriceBT">
+      	m_sDescription is string <mapping="Description">
+      	m_sCaption is string <mapping="VariationCaption">
+      	
+      	m_arrPhoto is array of CProductPhoto
+      	
+      	
+      	// Value of variation characteristics
+      	// The key is the rank of the characteristic in CCharacteristic::ms_aaCharacteristic
+      	// The value is the value of the instance
+      	m_arrCharacteristic is array of CCharacteristicValue
+      	
+      	
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256066279885557
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor( pclProduct is CProduct dynamic = Null, nIDVariation is 8-byte int = -1 )
+      
+      // Base product of the variation
+      m_pclAssociatedProduct <- pclProduct
+      m_nVariationID = nIDVariation
+      
+      IF nIDVariation<>-1 _AND_ pclProduct=Null THEN
+      	m_pclAssociatedProduct = pclFindProduct()
+      	
+      END
+      
+      
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256066279951093
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : LoadInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256066280016629
+     type_code : 12
+     code : |1+
+      // Summary: Reads information from the database
+      
+      PROCEDURE LoadInfo( coOption is COMB_ProductOperation = 0 )
+      
+      // Read the file
+      HReadSeekFirst(ProductVariation,ProductVariationID,m_nVariationID)
+      FileToMemory(object,ProductVariation)
+      
+      // Load the characteristics
+      DeleteAll(m_arrCharacteristic)
+      FOR EACH ProductVariation_CharacteristicValue  WHERE ProductVariationID = m_nVariationID
+      	cCharacVal is CCharacteristicValue
+      	cCharacVal.LoadInfo(ProductVariation_CharacteristicValue.CharacteristicValueID)
+      	Add(m_arrCharacteristic,cCharacVal)
+      END
+      
+      // Load the associated images
+      IF coOption[LoadImages] THEN
+      	DeleteAll(m_arrPhoto)
+      	FOR EACH ProductPhoto WHERE ProductVariationID = m_nVariationID
+      		clPhoto is CProductPhoto(ProductPhoto.ProductPhotoID)
+      		clPhoto.LoadInfo(object)
+      		Add(m_arrPhoto,clPhoto)
+      	END
+      END
+      
+      
+      CASE Error:
+      ErrorPropagate()
+      RETURN
+     type : 458752
+   -
+     name : pclFindPhoto
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256066280082165
+     type_code : 12
+     code : |1-
+      // Summary: Finds a variation photo corresponding to a given role
+      
+      PROCEDURE pclFindPhoto( coRole is COMB_PhotoRole ) : CProductPhoto
+      
+      clPhoto is CProductPhoto dynamic
+      FOR EACH clPhoto of m_arrPhoto
+      	IF clPhoto.bRole(coRole) THEN
+      		RESULT clPhoto
+      	END
+      END
+      
+      // No photo corresponds to the requested role
+      RESULT Null
+      
+      CASE Error:
+      	ErrorPropagate()
+      	RESULT Null
+     type : 458752
+   -
+     name : sStringCharacteristics
+     procedure_id : 1650256066280147701
+     type_code : 12
+     code : |1+
+      // Summary: Signature of the variation based on the list of 
+      
+      PROCEDURE sStringCharacteristics()
+      
+      sCharacString is string
+      
+      FOR EACH clCharac of m_arrCharacteristic
+      	sCharacString += ["|"] + clCharac.m_sValue
+      END
+      
+      RESULT sCharacString
+     type : 458752
+   -
+     name : pclFindProduct
+     procedure_id : 1650256066280213237
+     type_code : 12
+     code : |1+
+      // Summary: Returns the product associated with the variation
+      
+      PROCEDURE pclFindProduct()
+      
+      IF HReadSeekFirst(ProductVariation,ProductVariationID,m_nVariationID) THEN
+      	m_pclAssociatedProduct = new CProduct()
+      	m_pclAssociatedProduct.m_nProductID = ProductVariation.ProductID
+      	m_pclAssociatedProduct.LoadInfo(LoadDescription)
+      	RESULT m_pclAssociatedProduct
+      END
+      
+      RESULT Null
+      
+     type : 458752
+   -
+     name : CharacteristicsToString
+     procedure_id : 1650256066280278773
+     type_code : 12
+     code : |1-
+      // Summary: Returns a string identifying the characteristics
+      
+      PROCEDURE CharacteristicsToString(bWithCaption = True, sSeparator = ", ")
+      
+      
+      sCharacString is string
+      
+      FOR EACH clCharac of m_arrCharacteristic
+      	sCharacString += [sSeparator]
+      	
+      	IF bWithCaption THEN
+      		sCharacString += FirstLetterInUppercase(clCharac.m_pclCharacteristic.m_sName) + " : " 
+      	END
+      	
+      	sCharacString += FirstLetterInUppercase(clCharac.m_sDisplayValue) +[" "] + clCharac.m_pclCharacteristic.m_sUnit
+      	
+      END
+      
+      RESULT sCharacString
+     type : 458752
+   -
+     name : bOwnCharacteristic
+     procedure_id : 1650256066280344309
+     type_code : 12
+     code : |1-
+      // Summary: Checks whether the variation has a characteristic
+      
+      PROCEDURE bOwnCharacteristic(nValueRequestedCharacteristicID is 8-byte int, sNameRequestedCharacteristic is string = "")
+      
+      // Local variables
+      nSubscript 					is int
+      pclCharacteristicValue 	is CCharacteristicValue dynamic
+      
+      // Browse the characteristics
+      FOR nSubscript = 1 _TO_ m_arrCharacteristic..Occurrence
+      	
+      	// Position on the current characteristic
+      	pclCharacteristicValue = m_arrCharacteristic[nSubscript]
+      	
+      	// Check its value
+      	IF pclCharacteristicValue.m_nCharacteristicValueID = nValueRequestedCharacteristicID THEN
+      		// Check the name if requested
+      		IF sNameRequestedCharacteristic<>"" THEN
+      			// It's the proper characteristic
+      			IF pclCharacteristicValue.GetCharacteristicName() ~=sNameRequestedCharacteristic THEN
+      				RESULT True				
+      					
+      			END
+      		ELSE
+      			// The value is sufficient
+      			RESULT True
+      		END
+      		
+      		
+      	END
+      END
+      
+      RESULT False
+     type : 458752
+   -
+     name : GetCharacteristicValueAccordingToNameID
+     procedure_id : 1650256066280409845
+     type_code : 12
+     code : |1+
+      // Summary: Retrieves the identifier of a characteristic according to its name
+      
+      PROCEDURE GetCharacteristicValueAccordingToNameID(sNameRequestedCharacteristic is string)
+      
+      // Local variables
+      nSubscript 					is int
+      pclCharacteristicValue 	is CCharacteristicValue dynamic
+      
+      // Browse the characteristics
+      FOR nSubscript = 1 _TO_ m_arrCharacteristic..Occurrence
+      		
+      		// Position on the characteristic
+      		pclCharacteristicValue = m_arrCharacteristic[nSubscript]
+      		
+      		// Compare it
+      		IF pclCharacteristicValue.GetCharacteristicName() ~=sNameRequestedCharacteristic THEN
+      			RESULT pclCharacteristicValue.m_nCharacteristicValueID
+      		END
+      END
+      
+      
+      // not found by default
+      RESULT 0
+     type : 458752
+   -
+     name : GetCharacteristicValueAccordingToName
+     procedure_id : 1650256066280475381
+     type_code : 12
+     code : |1-
+      // Summary: Retrieves the value of a characteristic according to its name
+      // Parameters:
+      //	sNameRequestedCharacteristic (ANSI string): <specify the role of sNameRequestedCharacteristic >
+      // Return value:
+      // 	ANSI string: // 	None
+      //
+      PROCEDURE GetCharacteristicValueAccordingToName(sNameRequestedCharacteristic is string)
+      
+      // Local variables
+      nSubscript 					is int
+      pclCharacteristicValue 	is CCharacteristicValue dynamic
+      
+      // Browse the characteristics
+      FOR nSubscript = 1 _TO_ m_arrCharacteristic..Occurrence
+      	
+      	// Position on the characteristic
+      	pclCharacteristicValue = m_arrCharacteristic[nSubscript]
+      	
+      	// Compare it
+      	IF pclCharacteristicValue.GetCharacteristicName() ~=sNameRequestedCharacteristic THEN
+      		RESULT pclCharacteristicValue.m_sValue
+      	END
+      END
+      
+      
+      // not found by default
+      RESULT ""
+     type : 458752
+   -
+     name : GetFormattedPriceIOT
+     internal_properties : CAAAAAgAAAAt7Q8LvVPQa5hFwV5X01yUBjEtZbQj5xZVMISPtoO/tJIPd9ElzKtUHCZDH7HrOj2/RmruPTqxR1rSmfGDcA20uHg29a+QmVT/xOjIEGhvwEX2o04n36bZpFthsC1PzYQOUR+epsqMGyw1g8/Yh7g1UqybPYoi/fYcB5myK72VvGevmGGlE00UNiFAuNA3VrRMAx/W
+     procedure_id : 1650256066280540917
+     type_code : 12
+     code : |1+
+      // Summary: Returns the price IOT in string format
+      
+      PROCEDURE GetFormattedPriceIOT()
+      
+      // Local variables
+      cyPrice is currency
+      
+      // Find the taxes
+      clTaxes is CTaxRate = m_pclAssociatedProduct.m_pclTaxRate
+      dbgAssert(clTaxes<>Null,"Taxes not associated with this product")
+      
+      // Calculate the price IOT
+      cyPrice = m_cyUPBT * (1+clTaxes.m_cyRate)
+      
+      // Returns the formatted string
+      RESULT NumToString(cyPrice,".2f")
+     type : 458752
+  properties :
+   -
+     name : FormattedPriceIOT
+     identifier : 0x16e6e3261b04caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC FormattedPriceIOT()
+         RESULT CurrencyToString(Price)
+        type : 1966080
+     template_refs : []
+   -
+     name : Caption
+     identifier : 0x16e6e3261b05caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC Caption()
+         
+         IF m_sCaption<>"" THEN
+         	RESULT m_sCaption
+         END
+         
+         RESULT m_pclAssociatedProduct.m_sCaption
+        type : 1966080
+     template_refs : []
+   -
+     name : DefaultPhoto
+     identifier : 0x16e6e3261b06caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC DefaultPhoto(): CProductPhoto
+         
+         RESULT pclFindPhoto(Default_Photo)
+        type : 1966080
+      -
+        code : |1+
+         PROCEDURE PUBLIC DefaultPhoto(Value)
+         
+         dbgAssert(False,"Unable to modify the default photo")
+        type : 2031616
+     template_refs : []
+   -
+     name : Description
+     identifier : 0x16e6e3261b07caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1+
+         PROCEDURE PUBLIC Description()
+         
+         IF NOT m_sDescription ~= "" THEN
+         	RESULT m_sDescription
+         END
+         
+         RESULT m_pclAssociatedProduct.m_sDescription
+        type : 1966080
+      -
+        code : |1+
+         PROCEDURE PUBLIC Description(Value)
+         
+        type : 2031616
+     template_refs : []
+   -
+     name : Price
+     identifier : 0x16e6e3261b08caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC Price() : currency
+         RESULT m_cyUPBT * (1+m_pclAssociatedProduct.m_pclTaxRate.m_cyRate)
+        type : 1966080
+     template_refs : []
+   -
+     name : Characteristics
+     identifier : 0x16e6e3261b09caf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC Characteristics()
+         RESULT m_arrCharacteristic
+        type : 1966080
+     template_refs : []
+   -
+     name : AssociatedProduct
+     identifier : 0x16e6e3261b0acaf5
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC AssociatedProduct() : CProduct
+         RESULT m_pclAssociatedProduct
+        type : 1966080
+      -
+        code : |1-
+         
+        type : 2031616
+     template_refs : []
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15a8fe58024aa6f4
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

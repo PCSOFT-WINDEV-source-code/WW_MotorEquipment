@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="160px" height="34px" viewBox="0 0 160 34" enable-background="new 0 0 160 34" xml:space="preserve">
+<rect fill="#D31147" width="32" height="34"/>
+<rect x="32" fill="#E65E84" width="32" height="34"/>
+<rect x="64" opacity="0.15" fill="#D31147" width="32" height="34"/>
+<rect x="96" fill="#E65E84" width="32" height="34"/>
+<rect x="128" fill="#F01B57" width="32" height="34"/>
+<g id="person" opacity="0.15">
+	<path fill="#2E2E2D" d="M80,17c1.925,0,3.5-1.575,3.5-3.5S81.925,10,80,10s-3.5,1.575-3.5,3.5S78.075,17,80,17z M80,18.75
+		c-2.363,0-7,1.139-7,3.501V24h14v-1.749C87,19.889,82.363,18.75,80,18.75z"/>
+</g>
+<g id="person_1_">
+	<path fill="#42B348" d="M48,17c1.925,0,3.5-1.575,3.5-3.5S49.925,10,48,10s-3.5,1.575-3.5,3.5S46.075,17,48,17z M48,18.75
+		c-2.363,0-7,1.139-7,3.501V24h14v-1.749C55,19.889,50.363,18.75,48,18.75z"/>
+</g>
+<g id="person_2_">
+	<path fill="#2E2E2D" d="M16,17c1.925,0,3.5-1.575,3.5-3.5S17.925,10,16,10s-3.5,1.575-3.5,3.5S14.075,17,16,17z M16,18.75
+		c-2.363,0-7,1.139-7,3.501V24h14v-1.749C23,19.889,18.363,18.75,16,18.75z"/>
+</g>
+<g id="person_3_">
+	<path fill="#42B348" d="M112,17c1.924,0,3.5-1.575,3.5-3.5S113.924,10,112,10c-1.926,0-3.5,1.575-3.5,3.5S110.074,17,112,17z
+		 M112,18.75c-2.363,0-7,1.139-7,3.501V24h14v-1.749C119,19.889,114.363,18.75,112,18.75z"/>
+</g>
+<g id="person_4_">
+	<path fill="#0A7039" d="M144,17c1.924,0,3.5-1.575,3.5-3.5S145.924,10,144,10c-1.926,0-3.5,1.575-3.5,3.5S142.074,17,144,17z
+		 M144,18.75c-2.363,0-7,1.139-7,3.501V24h14v-1.749C151,19.889,146.363,18.75,144,18.75z"/>
+</g>
+</svg>

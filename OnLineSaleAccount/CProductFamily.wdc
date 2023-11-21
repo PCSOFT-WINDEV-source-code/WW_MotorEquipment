@@ -1,0 +1,75 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CProductFamily
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e32d1b56e5ef
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  internal_properties : CAAAAAgAAAB866eP4Ets4TTLMsshqEz3fUrTsqRNJyKDnG3Fh2I4G2j/gv1+ctrBQKEsIohDsPZ15m8aTDv/o82gJIt8op0fGoBvBA==
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      CProductFamily is Class
+      	
+      	m_nProductFamilyID is 8-byte int <mapping=ProductFamilyID>
+      	m_sFamilyCaption is string ANSI <mapping=FamilyCaption>
+      	m_sFamilyDescription is string <mapping=FamilyDescription>
+      	m_sPhoto is string ANSI <mapping=Photo>
+      	m_nParentProductFamilyID is 8-byte int <mapping=ParentProductFamilyID>
+      		
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256096349644271
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor()
+      
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256096349709807
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : LoadInfo
+     procedure_id : 1650256096349775343
+     type_code : 12
+     code : |1-
+      // Summary: Loads information about the product family
+      
+      PROCEDURE LoadInfo(nProductFamilyID)
+      
+      HReadSeekFirst(ProductFamily,ProductFamilyID,nProductFamilyID)
+      IF HFound(ProductFamily)=False THEN
+      	ErrorThrow(1,"Unable to find the requested product family.")
+      	RESULT False
+      END
+      
+      FileToMemory(object, ProductFamily)
+      
+      RESULT True
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15faaea1046e7be4
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

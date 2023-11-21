@@ -1,0 +1,116 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CProductPhoto
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e3291b3bd64f
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      
+      
+      CProductPhoto is Class
+      	m_nPhotoID is 8-byte int <mapping="ProductPhotoID">
+      	m_pclAssociatedProduct is CProduct dynamic
+      	m_pclAssociatedVariation is CProductVariation dynamic
+      
+      	m_nDisplayOrder is int <mapping="DisplayOrder">
+      	m_coRole is COMB_PhotoRole
+      	m_sPhotoPath is string <mapping="Photo">
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256079168001615
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor( nPhotoID is 8-byte int = 0 )
+      
+      m_nPhotoID = nPhotoID
+      
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256079168067151
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : LoadInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256079168132687
+     type_code : 12
+     code : |1-
+      // Summary: Reads information from the database
+      // Syntax:
+      //LoadInfo ([<pclVariation> is CProductVariation dynamic])
+      //
+      // Parameters:
+      //	pclVariation (dynamic CProductVariation - default value=0): <specify the role of pclVariation>
+      // Return value:
+      // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //// Automatic process of errors:   run the block of code CASE ERROR
+      //
+      
+      PROCEDURE LoadInfo( pclVariation is CProductVariation dynamic = Null )
+      
+      m_pclAssociatedVariation = pclVariation
+      IF pclVariation<>Null THEN m_pclAssociatedProduct = pclVariation.m_pclAssociatedProduct
+      
+      HReadSeekFirst(ProductPhoto,ProductPhotoID,m_nPhotoID)
+      FileToMemory(object,ProductPhoto)
+      
+      m_coRole = CombinationFromValue(COMB_PhotoRole,ProductPhoto.Role)
+      
+      
+      CASE Error:
+      ErrorPropagate()
+      RETURN
+     type : 458752
+   -
+     name : bRole
+     procedure_id : 1650256079168198223
+     type_code : 12
+     code : |1+
+      // Summary: Checks whether the role of the photo corresponds to the requested role
+      // Syntax:
+      //[ <Result> = ] bRole (<coRole> is combination)
+      //
+      // Parameters:
+      //	coRole (combination): <specify the role of coRole>
+      // Return value:
+      // 	Undefined type: // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //
+      PROCEDURE bRole( coRole is COMB_PhotoRole )
+      
+      RESULT m_coRole[coRole]
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15acba8d0084e389
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

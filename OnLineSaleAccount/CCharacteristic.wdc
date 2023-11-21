@@ -1,0 +1,110 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CCharacteristic
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e3251af2c567
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      
+      CCharacteristic is Class
+      	m_nCharacteristicID is 8-byte int <mapping="CharacteristicID">
+      	m_sName is string <mapping="CharacteristicName">
+      	m_sDescription is string <mapping="Description">
+      	m_eCharacteristicType is ENUM_CharacteristicType
+      	m_MinVal is string <mapping="MinVal">
+      	m_MaxVal is string <mapping="MaxVal">
+      	m_sUnit is string ANSI <mapping=Unit>
+      	
+      GLOBAL
+      	// All the characteristics are loaded in memory (not very may in most cases)
+      	ms_gaaCharacteristic is ASSOCIATIVE ARRAY of CCharacteristic
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256061983343975
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor()
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256061983409511
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : s_LoadFile
+     procedure_id : 1650256061983475047
+     type_code : 12
+     code : |1+
+      // Summary: <specify the action of the procedure>
+      // Syntax:
+      //s_LoadFile ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //
+      PROCEDURE PUBLIC GLOBAL s_LoadFile()
+      
+      DeleteAll(ms_gaaCharacteristic)
+      
+      clChar is CCharacteristic
+      FOR EACH Characteristic 
+      	FileToMemory(clChar,Characteristic)	
+      	ms_gaaCharacteristic[Characteristic.CharacteristicID] = clChar
+      END
+     type : 458752
+   -
+     name : LoadInfo
+     procedure_id : 1650256061983540583
+     type_code : 12
+     code : |1+
+      // Summary: <specify the action of the procedure>
+      // Syntax:
+      //LoadInfo (<nCharacID> is 8-byte int)
+      //
+      // Parameters:
+      //	nCharacID (8-byte integer): <specify the role of nCharacID>
+      // Return value:
+      // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //
+      PROCEDURE LoadInfo( nCharacID is 8-byte int )
+      
+      HReadSeekFirst(Characteristic,CharacteristicID,nCharacID)
+      FileToMemory(object,Characteristic)
+      
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15a904330251864d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

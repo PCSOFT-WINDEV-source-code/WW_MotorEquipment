@@ -1,0 +1,10 @@
+[INFOS]
+gaf=0
+title=WW_MotorEquipment
+image=description.gif
+description=description.rtf
+source=1
+preview=preview.png
+typesite=0
+[OBJECT]
+WW_MotorEquipment.wwp=4096

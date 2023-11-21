@@ -1,0 +1,86 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CCharacteristicValue
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e32b1b45db8f
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      CCharacteristicValue is Class
+      	m_nCharacteristicValueID is 8-byte int <mapping="CharacteristicValueID">
+      	m_sDisplayValue is string <mapping="DisplayValue">
+      	m_sValue is string <mapping="Value">
+      	
+      	m_pclCharacteristic is CCharacteristic dynamic 
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256087758592926
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor()
+      
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256087758658462
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : LoadInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256087758723998
+     type_code : 12
+     code : |1-
+      // Summary: Loads the information in database
+      
+      PROCEDURE LoadInfo( nCharacteristicValueID is 8-byte int )
+      
+      HReadSeekFirst(CharacteristicValue,CharacteristicValueID,nCharacteristicValueID)
+      FileToMemory(object,CharacteristicValue)
+      
+      m_pclCharacteristic = new CCharacteristic
+      m_pclCharacteristic.LoadInfo(CharacteristicValue.CharacteristicID)
+      
+      CASE Error:
+      	ErrorPropagate()
+      	RETURN
+     type : 458752
+   -
+     name : GetCharacteristicName
+     procedure_id : 1650256087758789534
+     type_code : 12
+     code : |1+
+      // Summary: Returns the name of the associated characteristic
+      
+      PROCEDURE GetCharacteristicName()
+      
+      IF m_pclCharacteristic = Null THEN RESULT ""
+      
+      RESULT m_pclCharacteristic.m_sName
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15f2e4d204032e5d
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

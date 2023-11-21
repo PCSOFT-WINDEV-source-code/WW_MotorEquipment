@@ -1,0 +1,421 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CProduct
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x16e6e3281b25d0d1
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACjlbrhfUsXBs/c72oETyApwx1c7MiN8/tf0lNguKUPHyHMDjiDIDG9+DOTJCgGjV5XegoAIHQa3Cbl0AW4OMacFekcQ10UsPBMVopkrnpAUvNBIDtSkz5faDB1DG8Jv2y9rY8Zumz2CszuH0Q=
+     code : |1+
+      CProduct is Class
+      	m_nProductID is 8-byte int <mapping="ProductID">
+      	m_sReference is string <mapping="Reference">
+      	m_sCaption is string <mapping="ProductCaption">
+      	m_sDescription is string <mapping="Description">
+      	m_bNewproduct is boolean <mapping="New">
+      	m_bBestSellers is boolean <mapping="BestSellers">
+      	m_nDisplayOrder is int <mapping="DisplayOrder">
+      	m_bPromotion is boolean <mapping="Promotion">
+      	m_arrVariation is array of CProductVariation dynamic
+      	m_pclFamily is CProductFamily dynamic
+      	m_pclTaxRate is CTaxRate dynamic
+      	m_nCharacteristicSetID is 8-byte int <mapping=CharacteristicSetID>
+      	m_aaPossibleCharacteristicsValues is ASSOCIATIVE ARRAY of strings
+      	m_aaPossibleDisplayedCharacteristicsValues is ASSOCIATIVE ARRAY of strings
+      	
+      END
+     type : 131072
+  procedures :
+   -
+     name : Manufacturer
+     procedure_id : 1650256074871722193
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructor()
+      
+     type : 589824
+   -
+     name : Destructor_
+     procedure_id : 1650256074871787729
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructor()
+      
+     type : 655360
+   -
+     name : LoadInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256074871853265
+     type_code : 12
+     code : |1-
+      // Summary: Reads information from the database
+      
+      PROCEDURE LoadInfo( coOption is COMB_ProductOperation )
+      
+      // Load the tax rate
+      m_pclTaxRate = new CTaxRate(Product.TaxRateID)
+      m_pclTaxRate.LoadInfo()
+      
+      
+      // Load the base description of the product
+      IF coOption[LoadDescription] THEN
+      	HReadSeekFirst(Product,ProductID,m_nProductID)
+      	FileToMemory(object,Product)
+      END
+      
+      // Load the variations
+      IF coOption[LoadVariation] THEN
+      	_LoadVariations(coOption)	
+      END
+      
+      // Load the product family
+      IF coOption[LoadFamily] THEN
+      	m_pclFamily = new CProductFamily()
+      	m_pclFamily.LoadInfo(Product.ProductFamilyID)
+      END
+      
+      // Loads the list of possible values by characteristic
+      FOR EACH Characteristic_CharacteristicSet WHERE CharacteristicSetID = m_nCharacteristicSetID
+      	// Adds the list of possible values to the array
+      	m_aaPossibleCharacteristicsValues[Characteristic_CharacteristicSet.CharacteristicID] = Characteristic_CharacteristicSet.PossibleValues
+      	m_aaPossibleDisplayedCharacteristicsValues[Characteristic_CharacteristicSet.CharacteristicID] = Characteristic_CharacteristicSet.PossibleDisplayedValues
+      END
+      
+      CASE Error:
+      	ErrorPropagate()
+      	RETURN
+     type : 458752
+   -
+     name : pclDefaultVariation
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256074871918801
+     type_code : 12
+     code : |1+
+      // Summary: Returns the default variation of a product
+      
+      PROCEDURE pclDefaultVariation() : CProductVariation
+      
+      RESULT m_arrVariation[nDefaultVariationRank()]
+      
+      CASE Error:
+      	ErrorPropagate()
+      	RESULT Null
+      
+     type : 458752
+   -
+     name : pclVariationPerRank
+     procedure_id : 1650256074871984337
+     type_code : 12
+     code : |1+
+      // Summary: Returns the variation of a product according to its rank
+      
+      PROCEDURE pclVariationPerRank( nRank is int )
+      
+      RESULT m_arrVariation[nRank]
+      
+     type : 458752
+   -
+     name : pclVariationByID
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256074872049873
+     type_code : 12
+     code : |1-
+      // Summary: Returns the variation of a product according to its ID
+      
+      PROCEDURE pclVariationByID( nID is 8-byte int )
+      
+      // Local variables
+      nVariationRank is int
+      
+      // Check whether the variations are loaded
+      IF m_arrVariation..Occurrence = 0 THEN RESULT Null
+      
+      // Find the variation
+      nVariationRank  = pclVariationRankByID(nID)
+      IF nVariationRank<=0 THEN RESULT Null
+      
+      // Return the variation
+      RESULT m_arrVariation[nVariationRank]
+      
+      
+      CASE Error:
+      	ErrorPropagate()
+      	RESULT Null
+      	
+     type : 458752
+   -
+     name : nDefaultVariationRank
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1650256074872115409
+     type_code : 12
+     code : |1+
+      // Summary: Returns the rank of the default variation
+      
+      PROCEDURE nDefaultVariationRank()
+      
+      IF m_arrVariation..Occurrence=0 THEN
+      	// Load the variations
+      	_LoadVariations()
+      	ErrorThrow(1,"The table of variations is empty. The variations may have not been loaded")
+      	RESULT 0
+      END
+      
+      nRank is int = Seek(m_arrVariation,asLinear,"m_bByDefault",True)
+      IF nRank>0 THEN
+      	RESULT nRank
+      END
+      
+      ErrorThrow(2,"No default variation for this product")
+      RESULT 0
+      
+      CASE Error:
+      ErrorPropagate()
+      RESULT Null
+     type : 458752
+   -
+     name : pclVariationRankByID
+     procedure_id : 1650256074872180945
+     type_code : 12
+     code : |1+
+      // Summary: Returns the rank of the variation according to its ID
+      
+      PROCEDURE pclVariationRankByID( nID is 8-byte int )
+      
+      nRank is int = Seek(m_arrVariation,asLinear,"m_nVariationID",nID)
+      
+      RESULT nRank
+     type : 458752
+   -
+     name : pclFindVariationByCharac
+     procedure_id : 1650256074872246481
+     type_code : 12
+     code : |1-
+      // Summary: Returns a variation according to its characteristics
+      
+      PROCEDURE pclFindVariationByCharac( sCharacString is string )
+      
+      pclVariation is  CProductVariation dynamic
+      
+      FOR EACH pclVariation of m_arrVariation
+      	IF pclVariation.sStringCharacteristics()=sCharacString THEN
+      		RESULT pclVariation
+      	END
+      END
+      
+      RESULT Null
+     type : 458752
+   -
+     name : _LoadVariations
+     procedure_id : 1650256074872312017
+     type_code : 12
+     code : |1-
+      // Summary: Loads the variations
+      
+      PROCEDURE _LoadVariations(coOption is COMB_ProductOperation = 0)
+      
+      FOR EACH ProductVariation WHERE ProductID = m_nProductID
+      	clVariation is CProductVariation(object,ProductVariation.ProductVariationID)
+      	clVariation.LoadInfo(coOption)
+      	Add(m_arrVariation,clVariation)
+      END
+     type : 458752
+   -
+     name : FindVariationWithCharacteristics
+     procedure_id : 1650256074872377553
+     type_code : 12
+     code : |1-
+      // Summary: Finds a variation with a set of characteristics or the most suitable one
+      
+      PROCEDURE FindVariationWithCharacteristics(arrCharacteristic is array of 8-byte int, sMainCharacteristicName is string)
+      
+      // Local variables
+      nVariationSubscript 		is int
+      nCharacteristicSubscript 	is int
+      pclCurrentVariation 	is CProductVariation dynamic
+      bFound					is boolean
+      
+      // Browse the product and its variations
+      FOR nVariationSubscript = 1 _TO_ m_arrVariation..Occurrence
+      
+      	// Position on the variation
+      	pclCurrentVariation = m_arrVariation[nVariationSubscript]	
+      	
+      	// Check whether this variation has the same number of characteristics as the request
+      	IF  pclCurrentVariation.m_arrCharacteristic..Occurrence = arrCharacteristic..Occurrence THEN
+      		
+      		// Be default, the variation is considered as being the proper one
+      		bFound = True
+      		FOR nCharacteristicSubscript = 1 _TO_ arrCharacteristic..Occurrence
+      			// Check whether the variation owns the characteristic
+      			IF pclCurrentVariation.bOwnCharacteristic(arrCharacteristic[nCharacteristicSubscript]) = False THEN
+      				// At least does not correspond
+      				bFound = False
+      			END
+      		END
+      	
+      		// No characteristic was found: it's the proper variation
+      		IF bFound = True THEN
+      			// The variation was found
+      			RESULT pclCurrentVariation
+      			
+      		END
+      	END	
+      END
+      
+      // If we reach this point, it means that we did not found a variation with all the characteristics
+      // Take the "main" characteristic of the object
+      // Browse the product and its variations
+      FOR nVariationSubscript = 1 _TO_ m_arrVariation..Occurrence
+      	// Position on the variation
+      	pclCurrentVariation = m_arrVariation[nVariationSubscript]
+      	
+      	// Check whether this variation has at least the main characteristic
+      	FOR nCharacteristicSubscript = 1 _TO_ arrCharacteristic..Occurrence
+      		// Check whether the variation owns the characteristic
+      		IF pclCurrentVariation.bOwnCharacteristic(arrCharacteristic[nCharacteristicSubscript],sMainCharacteristicName) = True THEN
+      			// The variation was found
+      			RESULT pclCurrentVariation		
+      		END
+      	END
+      END
+      
+      // Variation not found
+      RESULT Null
+     type : 458752
+   -
+     name : LoadFromDatabase
+     procedure_id : 1650256074872443089
+     type_code : 12
+     code : |1+
+      // Summary: Loads the product information from the database
+      
+      PROCEDURE LoadFromDatabase(nProductID is 8-byte int, nIDVariation is 8-byte int)
+      
+      // Local variables
+      nCurrentVariationID is 8-byte int
+      
+      // Load the product and its variations
+      HReadSeekFirst(Product,ProductID,nProductID)
+      dbgAssert(False,"Product not found in database")
+      
+      // Load the information
+      FileToMemory(object,Product)
+      LoadInfo(LoadVariation+LoadDescription+LoadImages+LoadFamily)
+      
+      // Check whether the stored variation still belongs to the requested product
+      IF pclVariationByID(nIDVariation) = Null _OR_ nIDVariation = 0  THEN
+      	// Find the default variation of this product
+      	pclDefaultVariation is CProductVariation dynamic = DefaultVariation
+      	
+      
+      	// Find the default variation of this product
+      	nCurrentVariationID = pclDefaultVariation.m_nVariationID
+      ELSE
+      	nCurrentVariationID = nIDVariation
+      END
+      
+      RESULT nCurrentVariationID
+     type : 458752
+   -
+     name : GetFamilyCaption
+     procedure_id : 1650256074872508625
+     type_code : 12
+     code : |1-
+      // Summary: Returns the caption of the product family
+      
+      PROCEDURE GetFamilyCaption()
+      
+      IF m_pclFamily = Null THEN RESULT ""
+      
+      RESULT m_pclFamily.m_sFamilyCaption
+     type : 458752
+   -
+     name : LoadFromDatabaseAccordingToVariation
+     procedure_id : 1650256074872574161
+     type_code : 12
+     code : |1+
+      // Summary: Loads the product information from the database
+      
+      PROCEDURE LoadFromDatabaseAccordingToVariation(nIDVariation is 8-byte int)
+      
+      // Local variables
+      nCurrentVariationID is 8-byte int
+      
+      // Load the product and its variations
+      HReadSeekFirst(ProductVariation,ProductVariationID,nIDVariation)
+      dbgAssert(HFound(ProductVariation),"Variation not found in database")
+      
+      // Load the product and its variations
+      HReadSeekFirst(Product,ProductID,ProductVariation.ProductID)
+      dbgAssert(HFound(Product),"Product not found in database")
+      
+      // Load the information
+      FileToMemory(object,Product)
+      LoadInfo(LoadVariation+LoadDescription+LoadImages+LoadFamily)
+      
+      // Check whether the stored variation still belongs to the requested product
+      IF pclVariationByID(nIDVariation) = Null _OR_ nIDVariation = 0  THEN
+      	// Find the default variation of this product
+      	pclDefaultVariation is CProductVariation dynamic = DefaultVariation
+      	
+      
+      	// Find the default variation of this product
+      	nCurrentVariationID = pclDefaultVariation.m_nVariationID
+      ELSE
+      	nCurrentVariationID = nIDVariation
+      END
+      
+      RESULT nCurrentVariationID
+     type : 458752
+  properties :
+   -
+     name : p_NbVariations
+     identifier : 0x16e6e3281b26d0d1
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCEDURE PUBLIC p_NbVariations()
+         
+         RESULT m_arrVariation..Occurrence
+        type : 1966080
+     template_refs : []
+   -
+     name : DefaultVariation
+     identifier : 0x16e6e3281b27d0d1
+     type_code : 103
+     p_codes :
+      -
+        code : |1+
+         PROCEDURE PUBLIC DefaultVariation()
+         
+         // Return the default variation
+         RESULT m_arrVariation[nDefaultVariationRank()]
+        type : 1966080
+      -
+        code : |1-
+         PROCEDURE PUBLIC DefaultVariation(Value)
+         
+         dbgAssert(False,"Unable to modify the default variation")
+        type : 2031616
+     template_refs : []
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x15a8fd27024302c9
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
